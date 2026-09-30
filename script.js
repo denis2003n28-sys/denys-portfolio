@@ -111,7 +111,8 @@ const translations = {
     "form.rateLimit": "Zu viele Anfragen. Bitte versuchen Sie es in ein paar Minuten erneut.",
     "form.success": "Nachricht gesendet. Ich melde mich in der Regel innerhalb eines Werktags.",
     "footer.privacy": "Datenschutz",
-    "impressum.note": "",
+    "impressum.title": "Impressum",
+    "impressum.text": "Pflichtangaben gemäß § 5 DDG werden hier ergänzt: vollständiger Name, ladungsfähige Anschrift und ein Kontaktweg. Bis dahin stehen hier keine erfundenen Adressen, Telefonnummern oder E-Mail-Adressen.",
     "privacy.text": "Die gewählte Sprache wird lokal in diesem Browser gespeichert (localStorage). Die Angaben aus dem Formular werden zur Bearbeitung der Anfrage über Formspree gesendet."
   },
   en: {
@@ -212,7 +213,8 @@ const translations = {
     "form.rateLimit": "Too many requests. Please try again in a few minutes.",
     "form.success": "Message sent. I usually reply within one working day.",
     "footer.privacy": "Privacy",
-    "impressum.note": "The legal notice below is in German.",
+    "impressum.title": "Legal notice",
+    "impressum.text": "The information required under § 5 DDG will be added here: full name, an address at which legal documents can be served, and a means of contact. Until then, no fictional addresses, phone numbers, or email addresses are shown here.",
     "privacy.text": "The chosen language is stored locally in this browser (localStorage). The details from the form are sent through Formspree so the inquiry can be handled."
   },
   ru: {
@@ -313,7 +315,8 @@ const translations = {
     "form.rateLimit": "Слишком много запросов. Попробуйте ещё раз через несколько минут.",
     "form.success": "Сообщение отправлено. Обычно отвечаю в течение одного рабочего дня.",
     "footer.privacy": "Конфиденциальность",
-    "impressum.note": "Юридические сведения ниже приведены на немецком языке.",
+    "impressum.title": "Правовая информация",
+    "impressum.text": "Здесь будут добавлены обязательные сведения согласно § 5 DDG: полное имя, адрес для вручения официальной корреспонденции и способ связи. До этого здесь не будут указываться вымышленные адреса, номера телефонов или адреса электронной почты.",
     "privacy.text": "Выбранный язык хранится локально в этом браузере (localStorage). Данные из формы отправляются через Formspree, чтобы обработать заявку."
   }
 };
