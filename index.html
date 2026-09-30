@@ -231,6 +231,7 @@
             </div>
 
             <form id="contact-form" action="#kontakt" method="post" novalidate aria-labelledby="contact-heading">
+              <input type="hidden" name="subject" value="Neue Anfrage über denys-portfolio">
               <div class="field">
                 <label for="name"><span data-i18n="form.name">Name</span></label>
                 <input id="name" name="name" type="text" autocomplete="name" required data-i18n-placeholder="form.phName" placeholder="Ihr Name">
@@ -238,8 +239,8 @@
               </div>
               <div class="field">
                 <label for="business"><span data-i18n="form.business">Betrieb</span></label>
-                <input id="business" name="business" type="text" autocomplete="organization" required data-i18n-placeholder="form.phBusiness" placeholder="z. B. Werkstatt oder Laden">
-                <p class="field-error" id="business-error" data-error-for="business" hidden></p>
+                <input id="business" name="company" type="text" autocomplete="organization" required data-i18n-placeholder="form.phBusiness" placeholder="z. B. Werkstatt oder Laden">
+                <p class="field-error" id="business-error" data-error-for="company" hidden></p>
               </div>
               <div class="field">
                 <label for="email"><span data-i18n="form.email">E-Mail</span></label>
@@ -258,9 +259,9 @@
               </div>
               <div class="field">
                 <div class="privacy">
-                  <input id="privacy" name="privacy" type="checkbox" value="yes" required data-i18n-aria-label="form.privacyAria" aria-label="Ich habe den Hinweis zum Datenschutz gelesen.">
+                  <input id="privacy" name="privacy" type="checkbox" value="yes" required data-i18n-aria-label="form.privacyAria" aria-label="Die Formulardaten werden über Formspree gesendet. Ich habe den Hinweis zum Datenschutz gelesen.">
                   <p class="privacy-text">
-                    <label for="privacy"><span data-i18n="form.privacyBefore">Ich habe den Hinweis zum </span></label><a href="#datenschutz" data-i18n="form.privacyLink">Datenschutz</a><label for="privacy"><span data-i18n="form.privacyAfter"> gelesen.</span></label>
+                    <label for="privacy"><span data-i18n="form.privacyBefore">Die Formulardaten werden über Formspree gesendet. Ich habe den Hinweis zum </span></label><a href="#datenschutz" data-i18n="form.privacyLink">Datenschutz</a><label for="privacy"><span data-i18n="form.privacyAfter"> gelesen.</span></label>
                   </p>
                 </div>
                 <p class="field-error" id="privacy-error" data-error-for="privacy" hidden></p>
@@ -295,7 +296,7 @@
 
           <section class="legal" id="datenschutz">
             <h2 data-i18n="footer.privacy">Datenschutz</h2>
-            <p data-i18n="privacy.text">Die gewählte Sprache wird lokal in diesem Browser gespeichert (localStorage). Das Formular überträgt derzeit keine Eingaben an einen Server. Ein vollständiger Datenschutztext folgt, bevor Nachrichten wirklich versendet werden.</p>
+            <p data-i18n="privacy.text">Die gewählte Sprache wird lokal in diesem Browser gespeichert (localStorage). Die Angaben aus dem Formular werden zur Bearbeitung der Anfrage über Formspree gesendet.</p>
           </section>
         </div>
       </div>

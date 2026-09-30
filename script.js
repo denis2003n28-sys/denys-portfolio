@@ -1,14 +1,12 @@
 "use strict";
 
 /*
-  Real delivery later, without changing the form markup:
-  - email: shown as a mailto link next to the form
-  - endpoint: POST JSON { name, business, email, phone, message, lang }
-  Leave endpoint empty to keep the honest demo status.
+  email: shown as a mailto link next to the form.
+  endpoint: POST FormData to Formspree. The email field is Reply-To.
 */
 const contactConfig = {
-  email: "",
-  endpoint: ""
+  email: "moneygangwizard228@gmail.com",
+  endpoint: "https://formspree.io/f/maenkblp"
 };
 
 const STORAGE_KEY = "portfolio-lang";
@@ -85,10 +83,10 @@ const translations = {
     "form.phone": "Telefon",
     "form.optional": "optional",
     "form.message": "Nachricht",
-    "form.privacyBefore": "Ich habe den Hinweis zum ",
+    "form.privacyBefore": "Die Formulardaten werden über Formspree gesendet. Ich habe den Hinweis zum ",
     "form.privacyLink": "Datenschutz",
     "form.privacyAfter": " gelesen.",
-    "form.privacyAria": "Ich habe den Hinweis zum Datenschutz gelesen.",
+    "form.privacyAria": "Die Formulardaten werden über Formspree gesendet. Ich habe den Hinweis zum Datenschutz gelesen.",
     "form.phName": "Ihr Name",
     "form.phBusiness": "z. B. Werkstatt oder Laden",
     "form.phEmail": "name@domain.com",
@@ -98,13 +96,14 @@ const translations = {
     "form.required": "Bitte füllen Sie dieses Feld aus.",
     "form.badEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
     "form.needPrivacy": "Bitte bestätigen Sie den Hinweis zum Datenschutz.",
-    "form.sending": "Wird geprüft …",
+    "form.sending": "Wird gesendet …",
     "form.demo": "Vorschau: die Nachricht wurde nicht gesendet. Das Formular ist noch nicht an ein Postfach angeschlossen.",
     "form.error": "Die Anfrage konnte nicht gesendet werden. Bitte versuchen Sie es später erneut.",
+    "form.rateLimit": "Zu viele Anfragen. Bitte versuchen Sie es in ein paar Minuten erneut.",
     "form.success": "Nachricht gesendet. Ich melde mich in der Regel innerhalb eines Werktags.",
     "footer.privacy": "Datenschutz",
     "impressum.note": "",
-    "privacy.text": "Die gewählte Sprache wird lokal in diesem Browser gespeichert (localStorage). Das Formular überträgt derzeit keine Eingaben an einen Server. Ein vollständiger Datenschutztext folgt, bevor Nachrichten wirklich versendet werden."
+    "privacy.text": "Die gewählte Sprache wird lokal in diesem Browser gespeichert (localStorage). Die Angaben aus dem Formular werden zur Bearbeitung der Anfrage über Formspree gesendet."
   },
   en: {
     "meta.title": "Denys — Websites for small businesses",
@@ -176,10 +175,10 @@ const translations = {
     "form.phone": "Phone",
     "form.optional": "optional",
     "form.message": "Message",
-    "form.privacyBefore": "I have read the ",
+    "form.privacyBefore": "Form details are sent through Formspree. I have read the ",
     "form.privacyLink": "privacy note",
     "form.privacyAfter": ".",
-    "form.privacyAria": "I have read the privacy note.",
+    "form.privacyAria": "Form details are sent through Formspree. I have read the privacy note.",
     "form.phName": "Your name",
     "form.phBusiness": "e.g. workshop or shop",
     "form.phEmail": "name@domain.com",
@@ -189,13 +188,14 @@ const translations = {
     "form.required": "Please fill in this field.",
     "form.badEmail": "Please enter a valid email address.",
     "form.needPrivacy": "Please confirm the privacy note.",
-    "form.sending": "Checking …",
+    "form.sending": "Sending …",
     "form.demo": "Preview: the message was not sent. The form is not connected to an inbox yet.",
     "form.error": "The inquiry could not be sent. Please try again later.",
+    "form.rateLimit": "Too many requests. Please try again in a few minutes.",
     "form.success": "Message sent. I usually reply within one working day.",
     "footer.privacy": "Privacy",
     "impressum.note": "The legal notice below is in German.",
-    "privacy.text": "The chosen language is stored locally in this browser (localStorage). The form does not send entries to a server at the moment. A full privacy text will be added before messages are actually sent."
+    "privacy.text": "The chosen language is stored locally in this browser (localStorage). The details from the form are sent through Formspree so the inquiry can be handled."
   },
   ru: {
     "meta.title": "Denys — Сайты для небольших компаний",
@@ -267,10 +267,10 @@ const translations = {
     "form.phone": "Телефон",
     "form.optional": "необязательно",
     "form.message": "Сообщение",
-    "form.privacyBefore": "Я прочитал ",
+    "form.privacyBefore": "Данные формы отправляются через Formspree. Я прочитал ",
     "form.privacyLink": "примечание о защите данных",
     "form.privacyAfter": ".",
-    "form.privacyAria": "Я прочитал примечание о защите данных.",
+    "form.privacyAria": "Данные формы отправляются через Formspree. Я прочитал примечание о защите данных.",
     "form.phName": "Ваше имя",
     "form.phBusiness": "например, мастерская или магазин",
     "form.phEmail": "name@domain.com",
@@ -280,13 +280,14 @@ const translations = {
     "form.required": "Заполните это поле.",
     "form.badEmail": "Укажите корректный адрес почты.",
     "form.needPrivacy": "Подтвердите, что вы прочитали примечание о защите данных.",
-    "form.sending": "Проверка …",
+    "form.sending": "Отправка …",
     "form.demo": "Предпросмотр: сообщение не отправлено. Форма пока не подключена к почте.",
     "form.error": "Заявку не удалось отправить. Попробуйте ещё раз позже.",
+    "form.rateLimit": "Слишком много запросов. Попробуйте ещё раз через несколько минут.",
     "form.success": "Сообщение отправлено. Обычно отвечаю в течение одного рабочего дня.",
     "footer.privacy": "Конфиденциальность",
     "impressum.note": "Юридические сведения ниже приведены на немецком языке.",
-    "privacy.text": "Выбранный язык хранится локально в этом браузере (localStorage). Форма сейчас не отправляет данные на сервер. Полный текст о защите данных появится до того, как сообщения начнут реально уходить."
+    "privacy.text": "Выбранный язык хранится локально в этом браузере (localStorage). Данные из формы отправляются через Formspree, чтобы обработать заявку."
   }
 };
 
@@ -459,7 +460,7 @@ function isEmail(value) {
 
 function validateForm(form) {
   const name = form.elements.name;
-  const business = form.elements.business;
+  const company = form.elements.company;
   const email = form.elements.email;
   const message = form.elements.message;
   const privacy = form.elements.privacy;
@@ -471,7 +472,7 @@ function validateForm(form) {
   }
 
   check(name, name.value.trim() ? "" : "form.required");
-  check(business, business.value.trim() ? "" : "form.required");
+  check(company, company.value.trim() ? "" : "form.required");
   if (!email.value.trim()) check(email, "form.required");
   else if (!isEmail(email.value.trim())) check(email, "form.badEmail");
   else check(email, "");
@@ -481,27 +482,28 @@ function validateForm(form) {
   return firstInvalid;
 }
 
-function delay(ms) {
-  return new Promise(function (resolve) {
-    window.setTimeout(resolve, ms);
+async function sendInquiry(form) {
+  const response = await fetch(contactConfig.endpoint, {
+    method: "POST",
+    headers: {
+      Accept: "application/json"
+    },
+    body: new FormData(form)
   });
-}
 
-async function sendInquiry(payload) {
-  if (contactConfig.endpoint) {
-    const response = await fetch(contactConfig.endpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json"
-      },
-      body: JSON.stringify(payload)
-    });
-    if (!response.ok) throw new Error("request-failed");
-    return { ok: true, mode: "live" };
+  if (response.status === 429) {
+    const error = new Error("rate-limited");
+    error.status = 429;
+    throw error;
   }
-  await delay(350);
-  return { ok: true, mode: "demo" };
+
+  if (!response.ok) {
+    const error = new Error("request-failed");
+    error.status = response.status;
+    throw error;
+  }
+
+  return { ok: true };
 }
 
 function bindForm() {
@@ -519,6 +521,8 @@ function bindForm() {
   form.addEventListener("input", onEdit);
   form.addEventListener("change", onEdit);
 
+  const submitButton = form.querySelector("[type='submit']");
+
   form.addEventListener("submit", async function (event) {
     event.preventDefault();
     if (sending) return;
@@ -529,33 +533,22 @@ function bindForm() {
       return;
     }
 
-    const payload = {
-      name: form.elements.name.value.trim(),
-      business: form.elements.business.value.trim(),
-      email: form.elements.email.value.trim(),
-      phone: form.elements.phone.value.trim(),
-      message: form.elements.message.value.trim(),
-      lang: currentLang
-    };
-
     sending = true;
+    submitButton.disabled = true;
     form.setAttribute("aria-busy", "true");
     setStatus("form.sending");
 
     try {
-      const result = await sendInquiry(payload);
-      if (result.mode === "live") {
-        setStatus("form.success");
-        form.reset();
-      } else {
-        setStatus("form.demo");
-      }
+      await sendInquiry(form);
+      setStatus("form.success");
+      form.reset();
       document.getElementById("form-status").focus();
     } catch (error) {
-      setStatus("form.error");
+      setStatus(error && error.status === 429 ? "form.rateLimit" : "form.error");
       document.getElementById("form-status").focus();
     } finally {
       sending = false;
+      submitButton.disabled = false;
       form.removeAttribute("aria-busy");
     }
   });
