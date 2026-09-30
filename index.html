@@ -300,8 +300,61 @@
           </section>
         </div>
       </div>
+      <div class="footer-bird">
+        <button type="button" class="bird-button" data-i18n-aria-label="a11y.bird" aria-label="Kleiner Vogel">
+          <svg viewBox="0 0 16 8" width="32" height="16" aria-hidden="true" focusable="false" shape-rendering="crispEdges">
+            <g fill="currentColor">
+              <rect x="6" y="0" width="4" height="1" />
+              <rect x="4" y="1" width="7" height="1" />
+              <rect x="2" y="2" width="9" height="1" />
+              <rect x="13" y="2" width="2" height="1" />
+              <rect x="1" y="3" width="13" height="1" />
+              <rect x="0" y="4" width="14" height="1" />
+              <rect x="2" y="5" width="4" height="1" />
+              <rect x="8" y="5" width="5" height="1" />
+              <rect x="3" y="6" width="2" height="1" />
+              <rect x="9" y="6" width="2" height="1" />
+              <rect x="3" y="7" width="1" height="1" />
+              <rect x="9" y="7" width="1" height="1" />
+            </g>
+            <rect x="10" y="2" width="1" height="1" fill="#f3f4f2" />
+          </svg>
+        </button>
+      </div>
     </div>
   </footer>
+
+  <dialog class="bird-dialog" id="bird-dialog" aria-labelledby="bird-dialog-title" aria-modal="true">
+    <div class="bird-panel">
+      <div class="bird-bar">
+        <h2 id="bird-dialog-title" translate="no">Denys Bird</h2>
+        <div class="bird-bar-actions">
+          <button type="button" class="bird-sound" id="bird-sound" aria-pressed="true" data-i18n-aria-label="game.soundOn" aria-label="Ton an">
+            <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false">
+              <path fill="currentColor" d="M1 6h3l5-4v12L4 10H1z" />
+              <path class="bird-sound-wave" fill="currentColor" d="M11 5h2v6h-2zM14 3h2v10h-2z" />
+              <path class="bird-sound-slash" fill="currentColor" d="M1 14L14 1h1L2 15z" />
+            </svg>
+          </button>
+          <button type="button" class="bird-close" data-i18n-aria-label="game.close" aria-label="Schließen">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+      </div>
+      <div class="bird-hud">
+        <p><span data-i18n="game.score">Punkte</span> <span id="bird-score">0</span></p>
+        <p><span data-i18n="game.best">Bestwert</span> <span id="bird-best">0</span></p>
+      </div>
+      <div class="bird-stage">
+        <canvas id="bird-canvas" width="420" height="560" aria-hidden="true"></canvas>
+        <p class="bird-prompt" data-i18n="game.start">Start</p>
+        <div class="bird-over" hidden>
+          <p id="bird-over-title" class="bird-over-title" data-i18n="game.over" role="status">Spiel vorbei</p>
+          <button type="button" class="button" id="bird-restart" data-i18n="game.restart">Neu starten</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
 
   <script src="script.js"></script>
 </body>

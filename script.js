@@ -20,6 +20,15 @@ const translations = {
     "a11y.nav": "Hauptnavigation",
     "a11y.lang": "Sprache",
     "a11y.legal": "Rechtliches",
+    "a11y.bird": "Kleiner Vogel",
+    "game.score": "Punkte",
+    "game.best": "Bestwert",
+    "game.start": "Start",
+    "game.over": "Spiel vorbei",
+    "game.restart": "Neu starten",
+    "game.close": "Schließen",
+    "game.soundOn": "Ton an",
+    "game.soundOff": "Ton aus",
     "nav.work": "Beispiele",
     "nav.services": "Leistungen",
     "nav.process": "Ablauf",
@@ -112,6 +121,15 @@ const translations = {
     "a11y.nav": "Main navigation",
     "a11y.lang": "Language",
     "a11y.legal": "Legal",
+    "a11y.bird": "Small bird",
+    "game.score": "Score",
+    "game.best": "Best",
+    "game.start": "Start",
+    "game.over": "Game over",
+    "game.restart": "Restart",
+    "game.close": "Close",
+    "game.soundOn": "Sound on",
+    "game.soundOff": "Sound off",
     "nav.work": "Work",
     "nav.services": "Services",
     "nav.process": "Process",
@@ -204,6 +222,15 @@ const translations = {
     "a11y.nav": "Основная навигация",
     "a11y.lang": "Язык",
     "a11y.legal": "Правовая информация",
+    "a11y.bird": "Маленькая птица",
+    "game.score": "Счёт",
+    "game.best": "Рекорд",
+    "game.start": "Старт",
+    "game.over": "Игра окончена",
+    "game.restart": "Заново",
+    "game.close": "Закрыть",
+    "game.soundOn": "Звук включён",
+    "game.soundOff": "Звук выключен",
     "nav.work": "Работы",
     "nav.services": "Услуги",
     "nav.process": "Этапы",
@@ -606,9 +633,728 @@ function bindReveal() {
   });
 }
 
+function bindBird() {
+  var bird = document.querySelector(".bird-button");
+  var dialog = document.getElementById("bird-dialog");
+  var canvas = document.getElementById("bird-canvas");
+  var stage = document.querySelector(".bird-stage");
+  var bar = document.querySelector(".bird-bar");
+  var hud = document.querySelector(".bird-hud");
+  var closeBtn = document.querySelector(".bird-close");
+  var soundBtn = document.getElementById("bird-sound");
+  var panel = document.querySelector(".bird-panel");
+  var promptEl = document.querySelector(".bird-prompt");
+  var overEl = document.querySelector(".bird-over");
+  var overTitle = document.getElementById("bird-over-title");
+  var restartBtn = document.getElementById("bird-restart");
+  var scoreEl = document.getElementById("bird-score");
+  var bestEl = document.getElementById("bird-best");
+  if (!bird || !dialog || !canvas || !stage || !closeBtn || !promptEl || !overEl || !restartBtn) return;
+
+  var ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  var BEST_KEY = "denys-bird-best";
+  var SOUND_KEY = "denys-bird-muted";
+  var WORLD_W = 420;
+  var WORLD_H = 560;
+  var BIRD_X = 104;
+  var BIRD_SCALE = 3;
+  var BIRD_W = 16 * BIRD_SCALE;
+  var BIRD_H = 16 * BIRD_SCALE;
+  var GRAVITY = 1580;
+  var FLAP = -420;
+  var SPEED = 156;
+  var GAP = 168;
+  var PIPE_W = 54;
+  var SPACING = 228;
+  var FACE_W = 16;
+  var FACE_H = 13;
+  var FACE_SCALE = 4;
+  var FACE = [
+    "..###########...",
+    ".#...........#..",
+    ".#...........#..",
+    "#.###.####....#.",
+    "#..##...##.##..#",
+    ".#.#..#.....##.#",
+    ".#..##...###.#.#",
+    ".########.#...#.",
+    ".#.#.#.#.#...#..",
+    "#.#######...#...",
+    "#.........##....",
+    "#.....####......",
+    ".#####.........."
+  ];
+
+  var state = "ready";
+  var rafId = 0;
+  var lastTs = 0;
+  var birdY = 0;
+  var birdV = 0;
+  var playTime = 0;
+  var obstacles = [];
+  var score = 0;
+  var best = 0;
+  var scrollLockY = 0;
+  var scrollLocked = false;
+  var cityOffset = 0;
+  var muted = false;
+  var audioCtx = null;
+  var liveSounds = [];
+  var farCity = makeSkyline(4, 28, 96, 168);
+  var midCity = makeSkyline(9, 22, 64, 124);
+  var nearCity = makeSkyline(2, 16, 36, 78);
+
+  function makeSkyline(seed, count, minH, maxH) {
+    var items = [];
+    var x = 0;
+    var i;
+    for (i = 0; i < count; i += 1) {
+      var w = 20 + ((seed * 3 + i * 5) % 5) * 8;
+      var h = minH + ((seed * 7 + i * 11) % (maxH - minH + 1));
+      h = h - (h % 4);
+      var gap = 8 + ((i + seed) % 3) * 4;
+      items.push({ x: x, w: w, h: h, seed: seed + i });
+      x += w + gap;
+    }
+    return { items: items, width: Math.max(x, 1) };
+  }
+
+  function readBest() {
+    try {
+      var value = parseInt(localStorage.getItem(BEST_KEY), 10);
+      if (!isFinite(value) || value < 0) return 0;
+      return value;
+    } catch (error) {
+      return 0;
+    }
+  }
+
+  function writeBest(value) {
+    try {
+      localStorage.setItem(BEST_KEY, String(value));
+    } catch (error) {
+      /* Storage can be blocked. The run still ends. */
+    }
+  }
+
+  function paintScore() {
+    if (scoreEl) scoreEl.textContent = String(score);
+    if (bestEl) bestEl.textContent = String(best);
+  }
+
+  function spawnObstacle(x) {
+    var margin = 72;
+    var minY = margin;
+    var maxY = WORLD_H - margin - GAP;
+    return {
+      x: x,
+      gapY: minY + Math.random() * (maxY - minY),
+      passed: false
+    };
+  }
+
+  function lockScroll() {
+    if (scrollLocked) return;
+    scrollLockY = window.scrollY || window.pageYOffset || 0;
+    document.body.style.position = "fixed";
+    document.body.style.top = "-" + scrollLockY + "px";
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    document.body.style.width = "100%";
+    scrollLocked = true;
+  }
+
+  function unlockScroll() {
+    if (!scrollLocked) return;
+    document.body.style.position = "";
+    document.body.style.top = "";
+    document.body.style.left = "";
+    document.body.style.right = "";
+    document.body.style.width = "";
+    scrollLocked = false;
+    var root = document.documentElement;
+    var previousScroll = root.style.scrollBehavior;
+    root.style.scrollBehavior = "auto";
+    window.scrollTo(0, scrollLockY);
+    root.style.scrollBehavior = previousScroll;
+  }
+
+  function fitCanvas() {
+    var chrome = (bar ? bar.offsetHeight : 0) + (hud ? hud.offsetHeight : 0);
+    var gutter = 28;
+    var maxW = panel ? panel.clientWidth : 0;
+    if (maxW < 2) maxW = Math.max(1, Math.min(WORLD_W, window.innerWidth - gutter));
+    var maxH = Math.max(1, window.innerHeight - chrome - gutter);
+    var cssW = Math.min(WORLD_W, maxW);
+    var cssH = Math.floor(cssW * WORLD_H / WORLD_W);
+    if (cssH > maxH) {
+      cssH = maxH;
+      cssW = Math.floor(cssH * WORLD_W / WORLD_H);
+    }
+    cssW = Math.max(1, cssW);
+    cssH = Math.max(1, cssH);
+    var dpr = window.devicePixelRatio || 1;
+    if (dpr < 1) dpr = 1;
+    if (dpr > 3) dpr = 3;
+    canvas.style.width = cssW + "px";
+    canvas.style.height = cssH + "px";
+    var bitmapW = Math.max(1, Math.round(cssW * dpr));
+    var bitmapH = Math.max(1, Math.round(cssH * dpr));
+    if (canvas.width !== bitmapW || canvas.height !== bitmapH) {
+      canvas.width = bitmapW;
+      canvas.height = bitmapH;
+    }
+    ctx.setTransform((cssW / WORLD_W) * dpr, 0, 0, (cssH / WORLD_H) * dpr, 0, 0);
+    ctx.imageSmoothingEnabled = false;
+  }
+
+  function readMuted() {
+    try {
+      return localStorage.getItem(SOUND_KEY) === "1";
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function writeMuted(value) {
+    try {
+      localStorage.setItem(SOUND_KEY, value ? "1" : "0");
+    } catch (error) {
+      /* Storage can be blocked. The toggle still works for this visit. */
+    }
+  }
+
+  function paintSound() {
+    if (!soundBtn) return;
+    var key = muted ? "game.soundOff" : "game.soundOn";
+    soundBtn.classList.toggle("is-muted", muted);
+    soundBtn.setAttribute("aria-pressed", muted ? "false" : "true");
+    soundBtn.setAttribute("data-i18n-aria-label", key);
+    soundBtn.setAttribute("aria-label", textOf(currentLang, key) || "");
+  }
+
+  function trackSound(node) {
+    liveSounds.push(node);
+    node.onended = function () {
+      var index = liveSounds.indexOf(node);
+      if (index !== -1) liveSounds.splice(index, 1);
+    };
+  }
+
+  function silence() {
+    var i;
+    for (i = 0; i < liveSounds.length; i += 1) {
+      try {
+        liveSounds[i].stop();
+      } catch (error) {
+        /* Already stopped. */
+      }
+    }
+    liveSounds = [];
+    if (audioCtx && audioCtx.state === "running") audioCtx.suspend();
+  }
+
+  function ensureAudio() {
+    if (muted || !dialog.open) return null;
+    var AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return null;
+    try {
+      if (!audioCtx) audioCtx = new AudioContext();
+      if (audioCtx.state === "suspended") audioCtx.resume();
+      return audioCtx;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function tone(freq, freqEnd, duration, type, volume) {
+    var ac = ensureAudio();
+    if (!ac) return;
+    try {
+      var t = ac.currentTime;
+      var osc = ac.createOscillator();
+      var gain = ac.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, t);
+      if (freqEnd) osc.frequency.exponentialRampToValueAtTime(freqEnd, t + duration);
+      gain.gain.setValueAtTime(volume, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
+      osc.connect(gain);
+      gain.connect(ac.destination);
+      osc.start(t);
+      osc.stop(t + duration + 0.02);
+      trackSound(osc);
+    } catch (error) {
+      /* Sound is optional. */
+    }
+  }
+
+  function playJump() {
+    tone(360, 640, 0.08, "square", 0.04);
+  }
+
+  function playScore() {
+    tone(620, 880, 0.09, "triangle", 0.045);
+  }
+
+  function playHit() {
+    var ac = ensureAudio();
+    if (!ac) return;
+    try {
+    var t = ac.currentTime;
+    var length = Math.floor(ac.sampleRate * 0.16);
+    var buffer = ac.createBuffer(1, length, ac.sampleRate);
+    var data = buffer.getChannelData(0);
+    var i;
+    for (i = 0; i < length; i += 1) data[i] = (Math.random() * 2 - 1) * (1 - i / length);
+    var src = ac.createBufferSource();
+    var filter = ac.createBiquadFilter();
+    var gain = ac.createGain();
+    src.buffer = buffer;
+    filter.type = "lowpass";
+    filter.frequency.value = 380;
+    gain.gain.setValueAtTime(0.07, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
+    src.connect(filter);
+    filter.connect(gain);
+    gain.connect(ac.destination);
+    src.start(t);
+    src.stop(t + 0.18);
+    trackSound(src);
+    } catch (error) {
+      /* Sound is optional. */
+    }
+    tone(140, 70, 0.12, "square", 0.03);
+  }
+
+  var faceSprite = document.createElement("canvas");
+  faceSprite.width = FACE_W;
+  faceSprite.height = FACE_H;
+  var faceCtx = faceSprite.getContext("2d");
+  if (faceCtx) {
+    faceCtx.imageSmoothingEnabled = false;
+    var faceRow;
+    var faceCol;
+    var facePixel;
+    for (faceRow = 0; faceRow < FACE.length; faceRow += 1) {
+      for (faceCol = 0; faceCol < FACE[faceRow].length; faceCol += 1) {
+        facePixel = FACE[faceRow].charAt(faceCol);
+        if (facePixel === "#") faceCtx.fillStyle = "#000000";
+        else if (facePixel === "o") faceCtx.fillStyle = "#ffffff";
+        else continue;
+        faceCtx.fillRect(faceCol, faceRow, 1, 1);
+      }
+    }
+  }
+
+  var ROT_W = 22;
+  var ROT_H = 20;
+  var faceRot = document.createElement("canvas");
+  faceRot.width = ROT_W;
+  faceRot.height = ROT_H;
+  var rotCtx = faceRot.getContext("2d");
+
+  function blitRotated(angle) {
+    if (!rotCtx || !faceCtx) return;
+    var src = faceCtx.getImageData(0, 0, FACE_W, FACE_H);
+    var dst = rotCtx.createImageData(ROT_W, ROT_H);
+    var cos = Math.cos(angle);
+    var sin = Math.sin(angle);
+    var scx = (FACE_W - 1) / 2;
+    var scy = (FACE_H - 1) / 2;
+    var dcx = (ROT_W - 1) / 2;
+    var dcy = (ROT_H - 1) / 2;
+    var y;
+    var x;
+    var dx;
+    var dy;
+    var sx;
+    var sy;
+    var si;
+    var di;
+    for (y = 0; y < ROT_H; y += 1) {
+      for (x = 0; x < ROT_W; x += 1) {
+        dx = x - dcx;
+        dy = y - dcy;
+        sx = Math.round(scx + cos * dx + sin * dy);
+        sy = Math.round(scy - sin * dx + cos * dy);
+        if (sx < 0 || sy < 0 || sx >= FACE_W || sy >= FACE_H) continue;
+        si = (sy * FACE_W + sx) * 4;
+        if (src.data[si + 3] === 0) continue;
+        di = (y * ROT_W + x) * 4;
+        dst.data[di] = src.data[si];
+        dst.data[di + 1] = src.data[si + 1];
+        dst.data[di + 2] = src.data[si + 2];
+        dst.data[di + 3] = 255;
+      }
+    }
+    rotCtx.putImageData(dst, 0, 0);
+  }
+
+  function drawFace() {
+    if (!faceCtx) return;
+    var tilt = 0;
+    if (state === "playing") {
+      tilt = birdV / 3400;
+      if (tilt < -0.16) tilt = -0.16;
+      if (tilt > 0.2) tilt = 0.2;
+    }
+    var cx = Math.round(BIRD_X + 24);
+    var cy = Math.round(birdY + 24);
+    ctx.save();
+    ctx.imageSmoothingEnabled = false;
+    if ("webkitImageSmoothingEnabled" in ctx) ctx.webkitImageSmoothingEnabled = false;
+    ctx.translate(cx, cy);
+    ctx.scale(FACE_SCALE, FACE_SCALE);
+    if (tilt === 0) {
+      ctx.drawImage(faceSprite, -FACE_W / 2, -FACE_H / 2);
+    } else {
+      blitRotated(tilt);
+      ctx.drawImage(faceRot, -ROT_W / 2, -ROT_H / 2);
+    }
+    ctx.restore();
+  }
+
+  function drawSkyline(layer, color, windowColor, factor) {
+    var shift = Math.round(cityOffset * factor) % layer.width;
+    var copies = Math.ceil(WORLD_W / layer.width) + 2;
+    var copy;
+    var i;
+    var item;
+    var x;
+    var y;
+    var wy;
+    for (copy = -1; copy < copies; copy += 1) {
+      for (i = 0; i < layer.items.length; i += 1) {
+        item = layer.items[i];
+        x = Math.round(-shift + copy * layer.width + item.x);
+        if (x > WORLD_W || x + item.w < 0) continue;
+        y = WORLD_H - item.h;
+        ctx.fillStyle = color;
+        ctx.fillRect(x, y, item.w, item.h);
+        if (item.w > 28) ctx.fillRect(x + 4, y - 4, item.w - 12, 4);
+        if (!windowColor || item.h < 40 || item.w < 24) continue;
+        ctx.fillStyle = windowColor;
+        for (wy = y + 12; wy < WORLD_H - 14; wy += 16) {
+          ctx.fillRect(x + 5, wy, 3, 3);
+          if (item.w >= 36) ctx.fillRect(x + item.w - 9, wy, 3, 3);
+        }
+        if (item.seed % 4 === 0 && item.w >= 28) {
+          ctx.fillStyle = "#0f3d4c";
+          ctx.fillRect(x + 5, y + 12, 3, 3);
+        }
+      }
+    }
+  }
+
+  function drawColumn(x, y, h, capAtEnd) {
+    if (h <= 0) return;
+    var yLine;
+    var n;
+    ctx.fillStyle = "#0f3d4c";
+    ctx.fillRect(x, y, PIPE_W, h);
+    ctx.fillStyle = "#0c323e";
+    for (yLine = y + 8; yLine < y + h - 6; yLine += 10) ctx.fillRect(x + 2, yLine, PIPE_W - 4, 1);
+    ctx.fillStyle = "#1a1c19";
+    for (n = y + 6; n < y + h - 8; n += 18) {
+      ctx.fillRect(x, n, 3, 3);
+      ctx.fillRect(x + PIPE_W - 3, n + 8, 3, 3);
+    }
+    ctx.fillStyle = "#f3f4f2";
+    for (n = y + 16; n < y + h - 18; n += 22) {
+      ctx.fillRect(x + 10, n, 5, 5);
+      ctx.fillRect(x + PIPE_W - 16, n + 8, 5, 5);
+    }
+    ctx.fillStyle = "#1a1c19";
+    if (capAtEnd) {
+      ctx.fillRect(x, y + h - 6, PIPE_W, 6);
+      ctx.fillStyle = "#d4d5d1";
+      ctx.fillRect(x + 4, y + h - 4, 4, 2);
+      ctx.fillRect(x + 14, y + h - 4, 4, 2);
+      ctx.fillRect(x + PIPE_W - 10, y + h - 4, 4, 2);
+    } else {
+      ctx.fillRect(x, y, PIPE_W, 6);
+      ctx.fillStyle = "#d4d5d1";
+      ctx.fillRect(x + 4, y + 2, 4, 2);
+      ctx.fillRect(x + 14, y + 2, 4, 2);
+      ctx.fillRect(x + PIPE_W - 10, y + 2, 4, 2);
+    }
+  }
+
+  function drawObstacle(ob) {
+    var x = Math.round(ob.x);
+    var gapTop = Math.round(ob.gapY);
+    var gapBottom = gapTop + GAP;
+    drawColumn(x, 0, gapTop, true);
+    drawColumn(x, gapBottom, WORLD_H - gapBottom, false);
+  }
+
+  function draw() {
+    fitCanvas();
+    ctx.fillStyle = "#f3f4f2";
+    ctx.fillRect(0, 0, WORLD_W, WORLD_H);
+    drawSkyline(farCity, "#e4e5e1", "", 0.14);
+    drawSkyline(midCity, "#c9cbc6", "#f3f4f2", 0.32);
+    drawSkyline(nearCity, "#8d9ba1", "#f3f4f2", 0.52);
+
+    var i;
+    for (i = 0; i < obstacles.length; i += 1) drawObstacle(obstacles[i]);
+
+    drawFace();
+
+    ctx.fillStyle = "#1a1c19";
+    ctx.fillRect(0, WORLD_H - 2, WORLD_W, 2);
+  }
+
+  function stopLoop() {
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = 0;
+    lastTs = 0;
+  }
+
+  function showReady() {
+    promptEl.hidden = false;
+    overEl.hidden = true;
+  }
+
+  function showOver() {
+    promptEl.hidden = true;
+    if (overTitle) {
+      overTitle.textContent = "";
+      overEl.hidden = false;
+      overTitle.textContent = textOf(currentLang, "game.over") || "";
+    } else {
+      overEl.hidden = false;
+    }
+    restartBtn.focus();
+  }
+
+  function resetRound() {
+    stopLoop();
+    state = "ready";
+    birdY = (WORLD_H - BIRD_H) / 2;
+    birdV = 0;
+    playTime = 0;
+    cityOffset = 0;
+    score = 0;
+    obstacles = [];
+    var x = WORLD_W + 90;
+    var i;
+    for (i = 0; i < 3; i += 1) {
+      obstacles.push(spawnObstacle(x));
+      x += SPACING;
+    }
+    paintScore();
+    showReady();
+    draw();
+  }
+
+  function endRound() {
+    if (state === "over") return;
+    state = "over";
+    stopLoop();
+    if (score > best) {
+      best = score;
+      writeBest(best);
+      paintScore();
+    }
+    draw();
+    showOver();
+    playHit();
+  }
+
+  function step(dt) {
+    playTime += dt;
+    cityOffset += SPEED * dt;
+    birdV += GRAVITY * dt;
+    if (birdV > 620) birdV = 620;
+    birdY += birdV * dt;
+
+    var i;
+    for (i = 0; i < obstacles.length; i += 1) obstacles[i].x -= SPEED * dt;
+
+    for (i = 0; i < obstacles.length; i += 1) {
+      if (obstacles[i].x + PIPE_W >= -20) continue;
+      var maxX = obstacles[0].x;
+      var j;
+      for (j = 1; j < obstacles.length; j += 1) {
+        if (obstacles[j].x > maxX) maxX = obstacles[j].x;
+      }
+      obstacles[i] = spawnObstacle(maxX + SPACING);
+    }
+
+    var hitX = BIRD_X + 8;
+    var hitY = birdY + 10;
+    var hitW = 32;
+    var hitH = 28;
+    if (hitY < 0 || hitY + hitH > WORLD_H - 2) {
+      endRound();
+      return;
+    }
+
+    for (i = 0; i < obstacles.length; i += 1) {
+      var pipe = obstacles[i];
+      var overlapsX = hitX + hitW > pipe.x && hitX < pipe.x + PIPE_W;
+      if (overlapsX) {
+        var inGap = hitY > pipe.gapY && hitY + hitH < pipe.gapY + GAP;
+        if (!inGap) {
+          endRound();
+          return;
+        }
+      }
+      if (!pipe.passed && pipe.x + PIPE_W < BIRD_X + BIRD_W * 0.35) {
+        pipe.passed = true;
+        score += 1;
+        paintScore();
+        playScore();
+      }
+    }
+  }
+
+  function frame(ts) {
+    rafId = 0;
+    if (state !== "playing" || !dialog.open) return;
+    if (!lastTs) lastTs = ts;
+    var dt = (ts - lastTs) / 1000;
+    lastTs = ts;
+    if (dt > 0.05) dt = 0.05;
+    step(dt);
+    if (state === "playing") {
+      draw();
+      rafId = requestAnimationFrame(frame);
+    }
+  }
+
+  function startLoop() {
+    stopLoop();
+    rafId = requestAnimationFrame(frame);
+  }
+
+  function flap() {
+    if (!dialog.open || state === "over") return;
+    if (state === "ready") {
+      state = "playing";
+      promptEl.hidden = true;
+      startLoop();
+    }
+    birdV = FLAP;
+    playJump();
+  }
+
+  function focusable() {
+    return Array.prototype.filter.call(dialog.querySelectorAll("button"), function (el) {
+      return !el.hidden && !el.closest("[hidden]") && !el.disabled;
+    });
+  }
+
+  function openBird() {
+    if (dialog.open) return;
+    best = readBest();
+    lockScroll();
+    dialog.showModal();
+    resetRound();
+    closeBtn.focus();
+  }
+
+  function closeBird() {
+    if (!dialog.open && !scrollLocked) return;
+    stopLoop();
+    state = "ready";
+    silence();
+    unlockScroll();
+    if (dialog.open) dialog.close();
+    bird.focus();
+  }
+
+  bird.addEventListener("click", function () {
+    openBird();
+  });
+
+  closeBtn.addEventListener("click", function () {
+    closeBird();
+  });
+
+  if (soundBtn) {
+    muted = readMuted();
+    paintSound();
+    soundBtn.addEventListener("click", function () {
+      muted = !muted;
+      writeMuted(muted);
+      paintSound();
+      if (muted) silence();
+    });
+  }
+
+  restartBtn.addEventListener("click", function () {
+    resetRound();
+    flap();
+    closeBtn.focus();
+  });
+
+  dialog.addEventListener("cancel", function (event) {
+    event.preventDefault();
+    closeBird();
+  });
+
+  dialog.addEventListener("click", function (event) {
+    if (event.target === dialog) closeBird();
+  });
+
+  dialog.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeBird();
+      return;
+    }
+
+    if (event.key === "Tab") {
+      var items = focusable();
+      if (!items.length) {
+        event.preventDefault();
+        return;
+      }
+      var first = items[0];
+      var last = items[items.length - 1];
+      var active = document.activeElement;
+      if (event.shiftKey) {
+        if (active === first || !dialog.contains(active)) {
+          event.preventDefault();
+          last.focus();
+        }
+      } else if (active === last) {
+        event.preventDefault();
+        first.focus();
+      }
+      return;
+    }
+
+    if (event.key === " " || event.code === "Space") {
+      if (event.target === soundBtn) return;
+      if (state === "over" && event.target === restartBtn) return;
+      event.preventDefault();
+      if (event.repeat) return;
+      flap();
+    }
+  });
+
+  stage.addEventListener("pointerdown", function (event) {
+    if (event.target.closest("button")) return;
+    if (state === "over") return;
+    flap();
+  });
+
+  window.addEventListener("resize", function () {
+    if (!dialog.open) return;
+    draw();
+  });
+}
+
 setLanguage(resolveInitialLang(), false);
 bindLanguageSwitcher();
 setupEmailLink();
 bindForm();
 bindPreviews();
 bindReveal();
+bindBird();

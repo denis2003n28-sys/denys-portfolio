@@ -659,6 +659,239 @@ input:-webkit-autofill {
   color: var(--muted);
 }
 
+.footer-bird {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.25rem;
+  margin-bottom: -2.75rem;
+}
+
+.bird-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+}
+
+.bird-button svg {
+  display: block;
+  shape-rendering: crispEdges;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .bird-button {
+    transition: transform 180ms ease;
+  }
+
+  .bird-button:hover,
+  .bird-button:focus-visible {
+    transform: translateY(-3px);
+  }
+}
+
+.bird-dialog {
+  border: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.bird-dialog::backdrop {
+  background: rgba(26, 28, 25, 0.46);
+}
+
+.bird-dialog[open] {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0.75rem;
+  overflow: hidden;
+}
+
+.bird-panel {
+  width: min(420px, 100%);
+  max-width: 100%;
+  max-height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+}
+
+.bird-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.35rem 0.35rem 0.35rem 0.85rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.bird-bar h2 {
+  margin: 0;
+  min-width: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.2;
+}
+
+.bird-bar-actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+}
+
+.bird-sound {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.bird-sound svg {
+  display: block;
+}
+
+.bird-sound-slash {
+  display: none;
+}
+
+.bird-sound.is-muted .bird-sound-wave {
+  display: none;
+}
+
+.bird-sound.is-muted .bird-sound-slash {
+  display: block;
+}
+
+.bird-sound:hover,
+.bird-sound:focus-visible {
+  color: var(--accent);
+}
+
+.bird-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.bird-close:hover,
+.bird-close:focus-visible {
+  color: var(--accent);
+}
+
+.bird-hud {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0.85rem 0.45rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.bird-hud p {
+  margin: 0;
+}
+
+.bird-stage {
+  position: relative;
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+}
+
+.bird-stage canvas {
+  display: block;
+  max-width: 100%;
+  margin: 0 auto;
+  background: var(--bg);
+}
+
+.bird-prompt,
+.bird-over {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  text-align: center;
+}
+
+.bird-prompt {
+  padding: 0.4rem 0.75rem;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.bird-over {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 11rem;
+  padding: 0.95rem 1rem 1rem;
+}
+
+.bird-over-title {
+  margin: 0;
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .bird-dialog,
+  .bird-dialog::backdrop {
+    opacity: 0;
+    transition:
+      opacity 180ms ease,
+      overlay 180ms ease allow-discrete,
+      display 180ms ease allow-discrete;
+  }
+
+  .bird-dialog[open],
+  .bird-dialog[open]::backdrop {
+    opacity: 1;
+  }
+
+  @starting-style {
+    .bird-dialog[open],
+    .bird-dialog[open]::backdrop {
+      opacity: 0;
+    }
+  }
+}
+
 .noscript {
   margin-top: 1.5rem;
   padding: 0.75rem 0;
