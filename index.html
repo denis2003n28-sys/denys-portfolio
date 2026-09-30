@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="de" data-lang="de" translate="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Denys — Websites für kleine Betriebe</title>
+  <meta name="description" content="Denys baut Websites für Handwerk, Werkstatt und andere lokale Betriebe. Zwei Konzeptseiten sind online. Keine Kundenaufträge.">
+  <meta name="google" content="notranslate">
+  <meta name="theme-color" content="#f3f4f2">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230f3d4c'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='sans-serif' font-size='16' font-weight='600' fill='%23f3f4f2'%3ED%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    (function () {
+      var allowed = { de: true, en: true, ru: true };
+      var params = new URLSearchParams(location.search);
+      var query = (params.get("lang") || "").toLowerCase();
+      var stored = "";
+      try { stored = (localStorage.getItem("portfolio-lang") || "").toLowerCase(); } catch (error) {}
+      var lang = "de";
+      if (allowed[query]) lang = query;
+      else if (allowed[stored]) lang = stored;
+      document.documentElement.lang = lang;
+      document.documentElement.setAttribute("data-lang", lang);
+      if (lang !== "de") document.documentElement.setAttribute("data-pending", "");
+      try {
+        if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          document.documentElement.classList.add("motion");
+        }
+      } catch (error) {}
+      setTimeout(function () {
+        document.documentElement.removeAttribute("data-pending");
+        if (!document.documentElement.hasAttribute("data-motion-bound")) {
+          document.documentElement.classList.remove("motion");
+        }
+      }, 2500);
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip" href="#inhalt" data-i18n="a11y.skip">Zum Inhalt</a>
+
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="logo" href="#top" translate="no">Denys</a>
+      <nav class="nav" data-i18n-aria-label="a11y.nav" aria-label="Hauptnavigation">
+        <a href="#beispiele" data-i18n="nav.work">Beispiele</a>
+        <a href="#leistungen" data-i18n="nav.services">Leistungen</a>
+        <a href="#ablauf" data-i18n="nav.process">Ablauf</a>
+        <a href="#kontakt" data-i18n="nav.contact">Kontakt</a>
+      </nav>
+      <div class="lang" role="radiogroup" data-i18n-aria-label="a11y.lang" aria-label="Sprache">
+        <button type="button" class="lang-option" role="radio" data-lang-option="de" aria-checked="true" tabindex="0">DE</button>
+        <button type="button" class="lang-option" role="radio" data-lang-option="en" aria-checked="false" tabindex="-1">EN</button>
+        <button type="button" class="lang-option" role="radio" data-lang-option="ru" aria-checked="false" tabindex="-1">RU</button>
+      </div>
+      <a class="button header-cta" href="#kontakt" data-i18n="nav.cta">Anfragen</a>
+    </div>
+  </header>
+
+  <main id="inhalt">
+    <div class="shell">
+      <noscript>
+        <p class="noscript">Sprache und Formular brauchen JavaScript. Der Seitentext bleibt auf Deutsch lesbar.</p>
+      </noscript>
+
+      <section class="hero" id="top">
+        <div class="layout">
+          <p class="block-index hero-index" aria-hidden="true"></p>
+          <div class="hero-copy">
+            <p class="eyebrow" data-i18n="hero.eyebrow">Websites für kleine Betriebe</p>
+            <h1 data-i18n="hero.title">Ich baue Seiten, auf denen Kunden Sie erreichen.</h1>
+            <p class="lead" data-i18n="hero.lead">Für Handwerk, Werkstatt und andere lokale Betriebe. Leistungen, Kontakt und eine Anfrage — lesbar auf dem Handy.</p>
+            <p class="hero-note" data-i18n="hero.note">Eine Ansprechperson. Antwort in der Regel innerhalb eines Werktags.</p>
+            <div class="hero-actions">
+              <a class="text-link" href="#beispiele" data-i18n="hero.view">Beispiele ansehen</a>
+              <a class="button" href="#kontakt" data-i18n="nav.cta">Anfragen</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="block" id="beispiele">
+        <p class="block-index reveal" aria-hidden="true">01</p>
+        <div class="block-body">
+          <h2 class="reveal" data-i18n="projects.title">Beispiele</h2>
+          <p class="statement reveal" data-i18n="projects.statement">Zwei Konzepte. Keine Kundenaufträge.</p>
+          <p class="measure reveal" data-i18n="projects.intro">NordWerk und AutoKraft sind fiktive Betriebe. Die Seiten sind fertig und online. Sie zeigen Aufbau, Gestaltung und eine Funktion. Namen, Adressen und Bewertungen dort sind erfunden.</p>
+
+          <article class="project">
+            <figure class="reveal reveal-preview">
+              <div class="preview">
+                <div class="preview-chrome" translate="no">nordwerk-website.vercel.app</div>
+                <div class="preview-stage">
+                  <iframe
+                    src="https://nordwerk-website.vercel.app"
+                    data-i18n-title="projects.nordwerk.iframe"
+                    title="Vorschau der Konzeptseite NordWerk"
+                    loading="lazy"
+                    scrolling="no"
+                    tabindex="-1"
+                    referrerpolicy="no-referrer"></iframe>
+                </div>
+              </div>
+              <figcaption>
+                <p class="kicker" data-i18n="projects.nordwerk.trade">Innenausbau</p>
+                <h3 translate="no">NordWerk</h3>
+                <p data-i18n="projects.nordwerk.summary">Eine ruhige Seite für Leistungen, den Betrieb, den Ablauf und eine Anfrage.</p>
+                <p class="project-flag" data-i18n="projects.flag">Konzept · fiktiver Betrieb · keine Auftragsarbeit</p>
+              </figcaption>
+            </figure>
+            <ul class="points stagger">
+              <li class="reveal" data-i18n="projects.nordwerk.p1">Der Ton passt zu einem Handwerksbetrieb.</li>
+              <li class="reveal" data-i18n="projects.nordwerk.p2">Die Leistungen sind ohne Katalog lesbar.</li>
+              <li class="reveal" data-i18n="projects.nordwerk.p3">Die Anfrage liegt offen und ist nicht im Menü versteckt.</li>
+            </ul>
+            <p class="demo-note reveal" data-i18n="projects.demoLang">Die Demo selbst ist auf Deutsch.</p>
+            <a class="text-link reveal" href="https://nordwerk-website.vercel.app" target="_blank" rel="noopener noreferrer" data-i18n="projects.live" data-i18n-aria-label="projects.nordwerk.liveAria" aria-label="NordWerk live ansehen, öffnet in neuem Tab">Live ansehen</a>
+          </article>
+
+          <article class="project">
+            <figure class="reveal reveal-preview">
+              <div class="preview">
+                <div class="preview-chrome" translate="no">autokraft-website.vercel.app</div>
+                <div class="preview-stage">
+                  <iframe
+                    src="https://autokraft-website.vercel.app"
+                    data-i18n-title="projects.autokraft.iframe"
+                    title="Vorschau der Konzeptseite AutoKraft"
+                    loading="lazy"
+                    scrolling="no"
+                    tabindex="-1"
+                    referrerpolicy="no-referrer"></iframe>
+                </div>
+              </div>
+              <figcaption>
+                <p class="kicker" data-i18n="projects.autokraft.trade">Kfz-Werkstatt</p>
+                <h3 translate="no">AutoKraft</h3>
+                <p data-i18n="projects.autokraft.summary">Eine Werkstattseite mit Öffnungsstatus, Leistungsübersicht und einem unverbindlichen Preisrechner.</p>
+                <p class="project-flag" data-i18n="projects.flag">Konzept · fiktiver Betrieb · keine Auftragsarbeit</p>
+              </figcaption>
+            </figure>
+            <ul class="points stagger">
+              <li class="reveal" data-i18n="projects.autokraft.p1">Viele Leistungen bleiben auf einer Seite übersichtlich.</li>
+              <li class="reveal" data-i18n="projects.autokraft.p2">Eine Preisspanne ist vor dem Anruf sichtbar.</li>
+              <li class="reveal" data-i18n="projects.autokraft.p3">Telefon und Anfrage bleiben leicht zu erreichen.</li>
+            </ul>
+            <p class="demo-note reveal" data-i18n="projects.demoLang">Die Demo selbst ist auf Deutsch.</p>
+            <a class="text-link reveal" href="https://autokraft-website.vercel.app" target="_blank" rel="noopener noreferrer" data-i18n="projects.live" data-i18n-aria-label="projects.autokraft.liveAria" aria-label="AutoKraft live ansehen, öffnet in neuem Tab">Live ansehen</a>
+          </article>
+
+          <div class="projects-close reveal">
+            <p data-i18n="projects.closing">Eine Seite in dieser Art für Ihren Betrieb.</p>
+            <a class="button" href="#kontakt" data-i18n="nav.cta">Anfragen</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="block" id="leistungen">
+        <p class="block-index reveal" aria-hidden="true">02</p>
+        <div class="block-body">
+          <h2 class="reveal" data-i18n="services.title">Leistungen</h2>
+          <p class="measure reveal" data-i18n="services.intro">Was derzeit möglich ist.</p>
+          <ul class="plain-list stagger">
+            <li class="reveal" data-i18n="services.i1">Eine Website mit einer oder wenigen Seiten.</li>
+            <li class="reveal" data-i18n="services.i2">Leistungen, Ablauf und Kontakt so erklärt, dass klar ist, was als Nächstes zu tun ist.</li>
+            <li class="reveal" data-i18n="services.i3">Darstellung auf dem Handy.</li>
+            <li class="reveal" data-i18n="services.i4">Anruf, E-Mail und Formular.</li>
+            <li class="reveal" data-i18n="services.i5">Eine kleine Hilfe auf der Seite, wenn sie zum Betrieb passt — zum Beispiel eine unverbindliche Preiseinschätzung.</li>
+            <li class="reveal" data-i18n="services.i6">Veröffentlichung unter einer Adresse, die Sie weitergeben können.</li>
+            <li class="reveal" data-i18n="services.i7">Textänderungen nach Absprache.</li>
+          </ul>
+          <h3 class="reveal" data-i18n="services.boundaryTitle">Derzeit nicht im Angebot</h3>
+          <p class="measure reveal" data-i18n="services.boundary">Onlineshop, Terminbuchung mit Bezahlung, Google-Werbung und laufende Suchmaschinenbetreuung.</p>
+        </div>
+      </section>
+
+      <section class="block" id="ablauf">
+        <p class="block-index reveal" aria-hidden="true">03</p>
+        <div class="block-body">
+          <h2 class="reveal" data-i18n="process.title">Ablauf</h2>
+          <ol class="steps stagger">
+            <li class="reveal">
+              <span class="step-num" aria-hidden="true">1</span>
+              <div>
+                <h3 data-i18n="process.s1t">Ausgangslage</h3>
+                <p data-i18n="process.s1d">Sie schreiben, was der Betrieb macht und was die Seite können soll. Texte und Fotos, die schon da sind, genügen oft.</p>
+              </div>
+            </li>
+            <li class="reveal">
+              <span class="step-num" aria-hidden="true">2</span>
+              <div>
+                <h3 data-i18n="process.s2t">Umfang und Preis</h3>
+                <p data-i18n="process.s2d">Ich sage, was möglich ist, und nenne Umfang und Preis, bevor ich anfange.</p>
+              </div>
+            </li>
+            <li class="reveal">
+              <span class="step-num" aria-hidden="true">3</span>
+              <div>
+                <h3 data-i18n="process.s3t">Erste Version</h3>
+                <p data-i18n="process.s3d">Sie sehen eine erste Version. Wir korrigieren, dann geht die Seite online.</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="block" id="ueber-mich">
+        <p class="block-index reveal" aria-hidden="true">04</p>
+        <div class="block-body">
+          <h2 class="reveal" data-i18n="about.title">Über mich</h2>
+          <div class="measure reveal">
+            <p data-i18n="about.p1">Ich heiße Denys und entwickle Websites für kleine Betriebe. Beim Entwurf und im Code nutze ich moderne Werkzeuge, auch KI. Struktur, Texte und das, was online geht, lege ich selbst fest.</p>
+            <p data-i18n="about.p2">Ich arbeite direkt mit Ihnen, ohne Projektmanager dazwischen.</p>
+            <p data-i18n="about.p3">Die Beispiele oben sind Übungen, keine Referenzen von Auftraggebern.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="block" id="kontakt">
+        <p class="block-index reveal" aria-hidden="true">05</p>
+        <div class="block-body">
+          <h2 class="reveal" data-i18n="contact.title">Kontakt</h2>
+          <div class="contact-grid reveal">
+            <div>
+              <h3 id="contact-heading" data-i18n="contact.heading">Projekt anfragen</h3>
+              <p class="measure" data-i18n="contact.text">Schreiben Sie, welcher Betrieb es ist und was die Seite können soll. Texte und Fotos, die schon da sind, können Sie erwähnen. Ich melde mich in der Regel innerhalb eines Werktags.</p>
+              <p class="email-pending" data-i18n="contact.emailPending" data-email-pending>Eine direkte E-Mail-Adresse wird hier ergänzt.</p>
+              <p class="email-ready" data-email-ready hidden>
+                <a id="email-link" href=""></a>
+              </p>
+            </div>
+
+            <form id="contact-form" action="#kontakt" method="post" novalidate aria-labelledby="contact-heading">
+              <div class="field">
+                <label for="name"><span data-i18n="form.name">Name</span></label>
+                <input id="name" name="name" type="text" autocomplete="name" required data-i18n-placeholder="form.phName" placeholder="Ihr Name">
+                <p class="field-error" id="name-error" data-error-for="name" hidden></p>
+              </div>
+              <div class="field">
+                <label for="business"><span data-i18n="form.business">Betrieb</span></label>
+                <input id="business" name="business" type="text" autocomplete="organization" required data-i18n-placeholder="form.phBusiness" placeholder="z. B. Werkstatt oder Laden">
+                <p class="field-error" id="business-error" data-error-for="business" hidden></p>
+              </div>
+              <div class="field">
+                <label for="email"><span data-i18n="form.email">E-Mail</span></label>
+                <input id="email" name="email" type="email" inputmode="email" autocomplete="email" spellcheck="false" required data-i18n-placeholder="form.phEmail" placeholder="name@domain.com">
+                <p class="field-error" id="email-error" data-error-for="email" hidden></p>
+              </div>
+              <div class="field">
+                <label for="phone"><span data-i18n="form.phone">Telefon</span> <span class="optional" data-i18n="form.optional">optional</span></label>
+                <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" data-i18n-placeholder="form.phPhone" placeholder="Für einen Rückruf">
+                <p class="field-error" id="phone-error" data-error-for="phone" hidden></p>
+              </div>
+              <div class="field">
+                <label for="message"><span data-i18n="form.message">Nachricht</span></label>
+                <textarea id="message" name="message" rows="6" required data-i18n-placeholder="form.phMessage" placeholder="Was die Seite können soll"></textarea>
+                <p class="field-error" id="message-error" data-error-for="message" hidden></p>
+              </div>
+              <div class="field">
+                <div class="privacy">
+                  <input id="privacy" name="privacy" type="checkbox" value="yes" required data-i18n-aria-label="form.privacyAria" aria-label="Ich habe den Hinweis zum Datenschutz gelesen.">
+                  <p class="privacy-text">
+                    <label for="privacy"><span data-i18n="form.privacyBefore">Ich habe den Hinweis zum </span></label><a href="#datenschutz" data-i18n="form.privacyLink">Datenschutz</a><label for="privacy"><span data-i18n="form.privacyAfter"> gelesen.</span></label>
+                  </p>
+                </div>
+                <p class="field-error" id="privacy-error" data-error-for="privacy" hidden></p>
+              </div>
+              <p id="form-status" class="form-status" role="status" tabindex="-1" hidden></p>
+              <button class="button" type="submit" data-i18n="form.submit">Anfrage senden</button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell">
+      <div class="layout">
+        <p class="block-index" aria-hidden="true"></p>
+        <div class="reveal">
+          <p class="footer-name" translate="no">Denys</p>
+          <nav class="legal-nav" data-i18n-aria-label="a11y.legal" aria-label="Rechtliches">
+            <a href="#impressum">Impressum</a>
+            <a href="#datenschutz" data-i18n="footer.privacy">Datenschutz</a>
+          </nav>
+
+          <section class="legal" id="impressum">
+            <h2>Impressum</h2>
+            <p class="legal-note" data-i18n="impressum.note" data-i18n-hide-empty hidden></p>
+            <div lang="de">
+              <p>Pflichtangaben nach § 5 DDG werden hier ergänzt: vollständiger Name, ladungsfähige Anschrift und ein Kontaktweg. Bis dahin stehen hier keine erfundenen Adressen, Telefonnummern oder E-Mail-Adressen.</p>
+            </div>
+          </section>
+
+          <section class="legal" id="datenschutz">
+            <h2 data-i18n="footer.privacy">Datenschutz</h2>
+            <p data-i18n="privacy.text">Die gewählte Sprache wird lokal in diesem Browser gespeichert (localStorage). Das Formular überträgt derzeit keine Eingaben an einen Server. Ein vollständiger Datenschutztext folgt, bevor Nachrichten wirklich versendet werden.</p>
+          </section>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
